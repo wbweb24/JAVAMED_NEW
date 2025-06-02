@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.Scene?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.javamed_new.PrimaryController">
+    <stylesheets>
+        borderPane.getScene().getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+    </stylesheets>
+
+    
+    <BorderPane id="borderPane">
+        <top>
+            <Label text="IDENTIFICACIÓN" id="titleLabel"/>
+        </top>
+        <center>
+            <VBox alignment="CENTER" spacing="15.0">
+                <TextField promptText="Usuario" id="userField"/>
+                <PasswordField promptText="Password" id="passwordField"/>
+                <HBox spacing="10.0">
+                    <Button text="Limpiar" id="clearButton"/>
+                    <Button text="Acceder" id="loginButton"/>
+                </HBox>
+            </VBox>
+        </center>
+    </BorderPane>
+</VBox>
