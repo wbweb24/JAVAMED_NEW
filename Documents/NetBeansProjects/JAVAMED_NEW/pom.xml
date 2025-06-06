@@ -1,9 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
+    <!-- Información del proyecto -->
     <groupId>com.mycompany</groupId>
     <artifactId>JAVAMED_NEW</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+    <!-- Configuración de Spring Boot -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -14,11 +20,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <javafxPath>C:/JavaFX</javafxPath>
+        <javafxPath>C:/JAVAFX</javafxPath>
     </properties>
 
     <dependencies>
-        <!-- Spring Boot -->
+        <!-- 🔹 Spring Boot 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -30,17 +36,32 @@
             <version>3.4.5</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency> -->
+
+        <!-- 🔹 Dependencias de JPA -->
+        <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
             <version>3.1.0</version>
         </dependency>
+
+        <!-- 🔹 Base de datos MySQL -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>8.0.33</version>
             <scope>runtime</scope>
         </dependency>
-        <!-- JavaFX -->
+
+        <!-- 🔹 JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>21</version>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -53,18 +74,21 @@
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-            <version>21</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
             <version>21</version>
         </dependency>
+
+        <!-- 🔹 Seguridad y encriptación -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
     </dependencies>
+
     <build>
         <plugins>
-            <!-- JavaFX Maven Plugin -->
+            <!-- 🔹 JavaFX Maven Plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -73,15 +97,15 @@
                     <mainClass>com.mycompany.javamed_new.App</mainClass>
                 </configuration>
             </plugin>
-            
-            <!-- Spring Boot Maven Plugin (versión corregida) -->
+
+            <!-- 🔹 Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.4.5</version>  <!-- Se agrega la versión -->
+                <version>3.4.5</version>
             </plugin>
-            
-            <!-- Maven Compiler Plugin -->
+
+            <!-- 🔹 Maven Compiler Plugin
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -89,14 +113,13 @@
                 <configuration>
                     <release>17</release>
                     <compilerArgs>
-                        <arg>--module-path</arg>
-                        <arg>${javafxPath}/lib</arg>  <!-- Apunta correctamente a los módulos -->
-                        <arg>--add-modules</arg>
+                        <arg>module-path</arg>
+                        <arg>${javafxPath}/lib</arg>
+                        <arg>add-modules</arg>
                         <arg>javafx.controls,javafx.fxml,javafx.base,javafx.graphics</arg>
                     </compilerArgs>
                 </configuration>
-            </plugin>
-            
+            </plugin>  -->
         </plugins>
     </build>
 </project>

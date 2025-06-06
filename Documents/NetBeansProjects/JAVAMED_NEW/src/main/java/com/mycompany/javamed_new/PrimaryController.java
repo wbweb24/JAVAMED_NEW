@@ -22,14 +22,18 @@ public class PrimaryController {
     @FXML
     private void initialize() {
         Platform.runLater(() -> {
-          Scene scene = borderPane.getScene();
-          if (scene != null) {
-              scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
-              System.out.println("CSS cargado correctamente!");
-          } else {
-             System.out.println("Error: La escena es null, no se pudo aplicar estilos.");
-          }
-     });
+            if (borderPane != null && borderPane.getScene() != null) {
+                String css = getClass().getResource("/styles/style.css").toExternalForm();
+                if (css != null) {
+                    borderPane.getScene().getStylesheets().add(css);
+                    System.out.println("CSS cargado correctamente!");
+                } else {
+                    System.out.println("Error: Archivo CSS no encontrado.");
+                }
+            } else {
+                System.out.println("Error: borderPane o la escena son null");
+            }
+        });
     }
 
     @FXML

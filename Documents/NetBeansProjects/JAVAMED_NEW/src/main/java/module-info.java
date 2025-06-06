@@ -7,5 +7,9 @@ module com.mycompany.javamed_new {
 
     opens com.mycompany.javamed_new to javafx.fxml;
     exports com.mycompany.javamed_new;
+    requires jbcrypt;
+    
+
+
 }
     

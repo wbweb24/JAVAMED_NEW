@@ -6,25 +6,22 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.Scene?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.javamed_new.PrimaryController">
-    <stylesheets>
-        borderPane.getScene().getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
-    </stylesheets>
+<VBox stylesheets="@styles/style.css" alignment="CENTER" spacing="20.0"
+      xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.mycompany.javamed_new.PrimaryController">
 
-    
-    <BorderPane id="borderPane">
+    <BorderPane fx:id="borderPane">
         <top>
-            <Label text="IDENTIFICACIÓN" id="titleLabel"/>
+            <Label text="IDENTIFICACIÓN" fx:id="titleLabel"/>
         </top>
         <center>
             <VBox alignment="CENTER" spacing="15.0">
-                <TextField promptText="Usuario" id="userField"/>
-                <PasswordField promptText="Password" id="passwordField"/>
+                <TextField promptText="Usuario" fx:id="userField"/>
+                <PasswordField promptText="Password" fx:id="passwordField"/>
                 <HBox spacing="10.0">
-                    <Button text="Limpiar" id="clearButton"/>
-                    <Button text="Acceder" id="loginButton"/>
+                    <Button text="Limpiar" fx:id="clearButton"/>
+                    <Button text="Acceder" fx:id="loginButton"/>
                 </HBox>
             </VBox>
         </center>
