@@ -3,14 +3,22 @@ package persistence;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import persistence.config.DBSchManager;
+import persistence.config.DbManager;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 
 public class DataFetcher {
-    private DBSchManager dbManager;
+    private DbManager dbManager;
 
-    public DataFetcher(DBSchManager dbManager) {
+    public DataFetcher(DbManager dbManager) {
         this.dbManager = dbManager;
     }
+
+    
 
     // ✅ Método para obtener datos y transformarlos sin usar DTO, Entity ni Mapper
     public Map<String, Object> fetchData(List<String> requestedFields, String userId) {
@@ -19,6 +27,12 @@ public class DataFetcher {
         // Construimos la consulta con los campos requeridos
         String query = "SELECT " + String.join(", ", requestedFields) + " FROM users WHERE user_id = ?";
         Map<String, Object> rawData = dbManager.queryMultiple(query, userId);
+        
+        // 🔹 Verificamos si `rawData` contiene información antes de procesarlo
+        if (rawData == null || rawData.isEmpty()) {
+            System.out.println("❌ Error: No se encontraron datos para el usuario " + userId);
+            return fetchedData; // Devuelve un mapa vacío
+        }
 
         // ✅ Transformación de datos que antes estaba en GenericDTO y GenericMapper
         for (String field : requestedFields) {
@@ -38,4 +52,25 @@ public class DataFetcher {
 
         return fetchedData;
     }
+    
+    public String getUserPasswordHash(String username) {
+        String hash = "";
+        String sql = "SELECT p.password_hash FROM users_credentials uc JOIN passwords p ON uc.id_password = p.id_password WHERE uc.username = ?";
+
+        try (Connection conn = dbManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                hash = rs.getString("password_hash");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return hash;
+    }
 }
+

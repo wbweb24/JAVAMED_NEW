@@ -10,6 +10,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import com.mycompany.javamed_new.errors.ErrorsHandler;
+import java.net.URL;
+import java.sql.Statement;
+import java.sql.ResultSet;
+
 
 /**
  * JavaFX App
@@ -36,12 +40,17 @@ public class App extends Application {
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        FXMLLoader loader = new FXMLLoader(App.class.getResource("/com.mycompany.javamed_new/" + fxml + ".fxml"));
+      public static void setRoot(String fxml) throws IOException {
+        URL location = App.class.getResource("/com/mycompany/javamed_new/" + fxml + ".fxml");
+        
+        if (location == null) {
+            throw new IOException("❌ Error: No se encontró la vista " + fxml + ".fxml");
+        }
+
+        FXMLLoader loader = new FXMLLoader(location);
         Parent root = loader.load();
         scene.setRoot(root);
     }
-
     public static void main(String[] args) {
         // ✅ Activamos el manejador global de errores
         ErrorsHandler.setGlobalHandler();
@@ -62,4 +71,9 @@ public class App extends Application {
         System.out.println("✅ Conexión exitosa a la base de datos JAVAMED!");
         conexion.close();
     }
+    
+   
+    
+    
+    
 }
