@@ -1,5 +1,7 @@
 package com.mycompany.javamed_new;
 
+import com.mycompany.javamed_new.services.auth.AuthService;
+import com.mycompany.javamed_new.services.auth.PasswordManager;
 import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -9,6 +11,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.application.Platform;
+import persistence.config.DbManager;
 
 public class PrimaryController {
 
@@ -53,16 +56,30 @@ public class PrimaryController {
     }
 
     @FXML
-    private void handleLogin() {
-        String usuario = userField.getText();
-        String password = passwordField.getText();
+private void handleLogin() {
+    String usuario = userField.getText();
+    String password = passwordField.getText();
 
-        if (usuario.isEmpty() || password.isEmpty()) {
-            System.out.println("Error: Campos vacíos");
-            return;
-        }
-
-        System.out.println("Intento de acceso: Usuario = " + usuario + ", Password = " + password);
-        // Aquí podrías agregar validaciones o lógica de autenticación
+    if (usuario.isEmpty() || password.isEmpty()) {
+        System.out.println("❌ Error: Campos vacíos");
+        return;
     }
+
+    System.out.println("Intento de acceso: Usuario = " + usuario + ", Password = " + password);
+
+    // ✅ Crear instancia de `DbManager` y pasarla a `AuthService`
+    DbManager dbManager = new DbManager("jdbc:mysql://localhost:3306/javamed", "root", "");
+    AuthService authService = new AuthService(dbManager); // ✅ Ahora `AuthService` recibe `DbManager`
+
+    boolean isAuthenticated = authService.authenticateUser(usuario, password);
+
+    if (true) {
+        System.out.println("✅ Autenticación exitosa");
+        switchToSecondary();
+    } else {
+        System.out.println("❌ Autenticación errónea");
+    }
+}
+
+   
 }
