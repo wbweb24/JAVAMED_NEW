@@ -6,13 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import com.mycompany.javamed_new.errors.ErrorsHandler;
 import java.net.URL;
-import java.sql.Statement;
-import java.sql.ResultSet;
 
 
 /**
@@ -30,7 +26,7 @@ public class App extends Application {
         PrimaryController controller = loader.getController();
         System.out.println("Controlador inicializado: " + controller);
 
-        comprobarConexionDB(); // Verificar conexión a la base de datos
+         // Verificar conexión a la base de datos
 
         scene = new Scene(root, 640, 480);
         scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
@@ -61,19 +57,5 @@ public class App extends Application {
             ErrorsHandler.handle(e); // 🔥 Cualquier fallo inesperado se maneja en un solo lugar
         }
     }
-
-    private static void comprobarConexionDB() throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/javamed"; 
-        String usuario = "root"; 
-        String contraseña = ""; 
-
-        Connection conexion = DriverManager.getConnection(url, usuario, contraseña);
-        System.out.println("✅ Conexión exitosa a la base de datos JAVAMED!");
-        conexion.close();
-    }
-    
-   
-    
-    
     
 }
