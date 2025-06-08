@@ -1,10 +1,8 @@
 package com.mycompany.javamed_new;
 
 import com.mycompany.javamed_new.services.auth.AuthService;
-import com.mycompany.javamed_new.services.auth.PasswordManager;
 import java.io.IOException;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -69,9 +67,9 @@ private void handleLogin() {
 
     // ✅ Crear instancia de `DbManager` y pasarla a `AuthService`
     DbManager dbManager = new DbManager("jdbc:mysql://localhost:3306/javamed", "root", "");
-    AuthService authService = new AuthService(dbManager); // ✅ Ahora `AuthService` recibe `DbManager`
 
-    boolean isAuthenticated = authService.authenticateUser(usuario, password);
+
+    /*boolean isAuthenticated = authService.authenticateUser(usuario, password);*/
 
     if (true) {
         System.out.println("✅ Autenticación exitosa");

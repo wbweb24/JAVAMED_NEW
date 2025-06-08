@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import persistence.config.DbManager;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 
@@ -19,58 +19,34 @@ public class DataFetcher {
     }
 
     
-
-    // ✅ Método para obtener datos y transformarlos sin usar DTO, Entity ni Mapper
-    public Map<String, Object> fetchData(List<String> requestedFields, String userId) {
+    public Map<String, Object> fetchData(List<String> requestedFields, String identifier) {
         Map<String, Object> fetchedData = new HashMap<>();
-
-        // Construimos la consulta con los campos requeridos
         String query = "SELECT " + String.join(", ", requestedFields) + " FROM users WHERE user_id = ?";
-        Map<String, Object> rawData = dbManager.queryMultiple(query, userId);
-        
-        // 🔹 Verificamos si `rawData` contiene información antes de procesarlo
-        if (rawData == null || rawData.isEmpty()) {
-            System.out.println("❌ Error: No se encontraron datos para el usuario " + userId);
-            return fetchedData; // Devuelve un mapa vacío
-        }
 
-        // ✅ Transformación de datos que antes estaba en GenericDTO y GenericMapper
-        for (String field : requestedFields) {
-            Object value = rawData.getOrDefault(field, null);
+        try (PreparedStatement stmt = dbManager.getConnection().prepareStatement(query)) {
+            stmt.setString(1, identifier);
+            ResultSet rs = stmt.executeQuery();
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
 
-            // ⚠️ Aplicamos una conversión básica según el tipo de dato esperado
-            if (value instanceof Integer) {
-                fetchedData.put(field, (Integer) value);
-            } else if (value instanceof Boolean) {
-                fetchedData.put(field, (Boolean) value);
-            } else if (value instanceof String) {
-                fetchedData.put(field, value.toString().trim()); // Eliminamos espacios innecesarios
-            } else {
-                fetchedData.put(field, value); // Guardamos tal cual si no necesita conversión
+            if (rs.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    String field = metaData.getColumnName(i);
+                    Object value = rs.getObject(i);
+
+                // ✅ Aplicamos transformación antes de devolver los datos
+                    if (value instanceof String) {
+                        fetchedData.put(field, value.toString().trim()); // 🔹 Eliminamos espacios
+                    } else {
+                        fetchedData.put(field, value);
+                    }
+                }
             }
+        } catch (SQLException e) {
+            System.out.println("❌ Error ejecutando consulta: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return fetchedData;
     }
-    
-    public String getUserPasswordHash(String username) {
-        String hash = "";
-        String sql = "SELECT p.password_hash FROM users_credentials uc JOIN passwords p ON uc.id_password = p.id_password WHERE uc.username = ?";
-
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, username);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                hash = rs.getString("password_hash");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return hash;
-    }
 }
-
