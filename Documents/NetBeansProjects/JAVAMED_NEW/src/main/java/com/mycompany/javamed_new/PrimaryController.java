@@ -1,10 +1,7 @@
 package com.mycompany.javamed_new;
 
-import com.mycompany.javamed_new.services.auth.AuthService;
 import java.io.IOException;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -14,11 +11,8 @@ import persistence.config.DbManager;
 public class PrimaryController {
 
     @FXML private BorderPane borderPane;
-    @FXML private Label titleLabel;
     @FXML private TextField userField;
     @FXML private PasswordField passwordField;
-    @FXML private Button clearButton;
-    @FXML private Button loginButton;
 
     @FXML
     private void initialize() {
@@ -43,7 +37,7 @@ public class PrimaryController {
             App.setRoot("secondary");
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cambiar de vista");
+            System.out.println("Error al acceder");
         }
     }
 
