@@ -1,6 +1,7 @@
 package persistence.config;
 
 import java.sql.*;
+import java.util.concurrent.Executors;
 
 public class DbManager {
     private Connection connection;
@@ -10,6 +11,9 @@ public class DbManager {
             this.connection = DriverManager.getConnection(dbUrl, user, password);
             System.out.println("✅ Conexión establecida con " + dbUrl);
 
+            // 🔹 Establece tiempo máximo de conexión en Java (5 minutos)
+            connection.setNetworkTimeout(Executors.newSingleThreadExecutor(), 300000);
+
             updateSchema(); // 🔹 Se actualiza el esquema de inmediato tras conectar
         } catch (SQLException e) {
             throw new RuntimeException("❌ Error conectando a la BD: " + e.getMessage());
@@ -17,6 +21,14 @@ public class DbManager {
     }
 
     public Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javamed", "root", "");
+                connection.setNetworkTimeout(Executors.newSingleThreadExecutor(), 300000);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("❌ Error obteniendo conexión: " + e.getMessage());
+        }
         return connection;
     }
 

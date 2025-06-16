@@ -1,50 +1,34 @@
 package com.mycompany.javamed_new.services.sessioncontext;
 
-import java.util.Map;
-import java.util.List;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.Pane;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorkArea {
-    private static final Map<String, List<String>> subMenuOptions = Map.of(
-        "Agenda", List.of("Consultar", "Nuevo", "Eliminar", "Modificar"),
-        "Facturación", List.of("Ver reportes", "Emitir factura", "Modificar"),
-        "Pacientes", List.of("Buscar historial", "Registrar paciente", "Eliminar registro"),
-        "Base de Datos", List.of("Añadir registro", "Consultar", "Exportar")
-    );
+    private static final Map<String, Node[]> views = new HashMap<>();
+    private static final Map<String, Node[]> subMenus = new HashMap<>();
 
-    private static final Map<String, String> viewPaths = Map.of(
-        "Consultar", "/views/consultar.fxml",
-        "Nuevo", "/views/nuevo.fxml",
-        "Eliminar", "/views/eliminar.fxml",
-        "Modificar", "/views/modificar.fxml"
-    );
+    static {
+        // 🔹 Definiendo vistas según el menú seleccionado
+        views.put("Inicio", new Node[]{new VBox(new Button("Bienvenido"))});
+        views.put("Agenda", new Node[]{new VBox(new Button("Ver citas"), new Button("Nueva cita"))});
+        views.put("Clientes", new Node[]{new VBox(new Button("Lista de clientes"), new Button("Buscar cliente"))});
+        views.put("Nuevo Usuario", new Node[]{new VBox(new Button("Registrar usuario"))});
 
-    public static VBox getSubMenu(String mainMenuOption) {
-        VBox subMenuContainer = new VBox(10); // 🔹 Espaciado dinámico
-        List<String> subOptions = subMenuOptions.getOrDefault(mainMenuOption, List.of("Volver"));
-
-        subOptions.forEach(option -> {
-            Button button = new Button(option);
-            button.setOnAction(e -> updateWorkArea(option));
-            subMenuContainer.getChildren().add(button);
-        });
-
-        return subMenuContainer;
+        // 🔹 Definiendo submenús según el menú principal
+        subMenus.put("Agenda", new Node[]{new Button("Ver agenda"), new Button("Añadir evento")});
+        subMenus.put("Clientes", new Node[]{new Button("Buscar clientes"), new Button("Historial")});
+        subMenus.put("Base de Datos", new Node[]{new Button("Nueva Alta"), new Button("Consultar")});
     }
 
-    private static void updateWorkArea(String option) {
-        SessionService.setCurrentView(getViewForMenuOption(option)); // 🔹 Actualiza vista en sesión
+    public static Node[] getViewForMenuOption(String menuOption) {
+        return views.getOrDefault(menuOption, new Node[]{new VBox(new Button("Vista no encontrada"))});
     }
 
-    public static Pane getViewForMenuOption(String menuOption) {
-        try {
-            return FXMLLoader.load(WorkArea.class.getResource(viewPaths.get(menuOption)));
-        } catch (Exception e) {
-            System.out.println("❌ Error al cargar vista: " + menuOption);
-            return new Pane(); // 🔹 Vista vacía si no se encuentra el archivo
-        }
+    public static Node[] getSubMenu(String mainMenuOption) {
+        return subMenus.getOrDefault(mainMenuOption, new Node[]{new Button("Submenú no disponible")});
     }
 }
