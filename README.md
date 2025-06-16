@@ -3,6 +3,7 @@ Aquí dejo lo que llevo en estos días, aunque algunas cosas deben ser desplazad
 Falta JUnit, revisar y refactorizar código etc, pero arquitecturalmente está bastante encauzado. Estoy persiguieno sobretodo modularidad y desacoplamiento, escalabilidad y dinamísmo y también eficiencia y economía del código. 
 También tengo que averiguar como subir aquí la DB, estoy usando Xampp.
 Lo tengo todo verde aún, pero el plan sigue siendo dejar una base medio presentable antes de final de este mes. 
+He decidio dejar el otro repositorio porque me parece adecuado para entender un poco el proceso evolutivo del proyecto.
 
 
 Saludos y gracias por leer.
