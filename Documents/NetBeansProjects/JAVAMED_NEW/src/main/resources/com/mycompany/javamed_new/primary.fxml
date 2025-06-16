@@ -21,7 +21,9 @@
                 <PasswordField promptText="Password" fx:id="passwordField"/>
                 <HBox spacing="10.0">
                     <Button text="Limpiar" fx:id="clearButton" onAction="#handleClear"/>
-                    <Button text="Acceder" fx:id="loginButton" onAction="#handleLogin"/>
+                    <Button text="Validar" fx:id="loginButton" onAction="#handleLogin"/>
+                    <Button text="Nueva Alta" fx:id="registerButton" onAction="#createNewUser"/>
+
 
                 </HBox>
             </VBox>

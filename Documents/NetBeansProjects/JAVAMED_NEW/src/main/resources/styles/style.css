@@ -31,10 +31,52 @@
     -fx-border-radius: 5px;
     -fx-padding: 10px;
 }
-#clearButton, #loginButton {
+.button {
     -fx-background-color: white;
     -fx-text-fill: #76BCE8 ;
     -fx-border-radius: 5px;
     -fx-font-weight: bold;
 }
 
+
+
+/* Estilo del contenedor del menú principal */
+#menuContainer, #subMenuContainer {
+    -fx-padding: 10px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #76BCE8;
+    -fx-border-width: 2px;
+}
+
+/* Área de trabajo */
+#workAreaContainer {
+    -fx-padding: 20px;
+    -fx-background-color: #f5f5f5;
+    -fx-border-radius: 5px;
+    -fx-border-color: #76BCE8;
+}
+
+/* Botón de Cerrar Sesión */
+#secondaryButton {
+    -fx-background-color: #ff4d4d; /* Rojo */
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-font-weight: bold;
+}
+
+/* Menú principal alineado horizontalmente */
+#menuContainer {
+    -fx-padding: 10px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #76BCE8;
+    -fx-border-width: 2px;
+}
+
+/* Submenú alineado a la derecha */
+#subMenuContainer {
+    -fx-padding: 10px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #76BCE8;
+    -fx-border-width: 2px;
+    -fx-alignment: center-right;
+}
