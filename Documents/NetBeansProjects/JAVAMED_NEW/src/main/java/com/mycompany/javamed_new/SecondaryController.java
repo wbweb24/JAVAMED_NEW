@@ -20,24 +20,29 @@ import com.mycompany.javamed_new.services.sessioncontext.FeaturesProvider;
 public class SecondaryController {
 
     @FXML private GridPane secondaryMenuContainer;
-    @FXML private StackPane secondarySubMenuContainer;
+    @FXML private VBox secondarySubMenuContainer;
     @FXML private StackPane secondaryWorkAreaContainer;
 
     @FXML
     private void initialize() {
         SessionService.setControllerInstance(this);
 
-        // Cargar el menú principal
+        // Cargar el menú principal con acción completa
         int column = 0;
         for (Button button : SessionService.getMenu()) {
             secondaryMenuContainer.add(button, column++, 0);
-            button.setOnMouseClicked(e -> updateSubMenu(button.getText()));
+            button.setOnAction(e -> {
+                String nombre = button.getText();
+                updateSubMenu(nombre);
+                updateWorkArea(FeaturesProvider.getDefaultView(nombre));
+            });
         }
 
-        // Pantalla de bienvenida
+        // Pantalla de bienvenida inicial
         Label welcome = new Label("👋 ¡Bienvenido, " + SessionService.getUser() + "!");
         Label dateInfo = new Label("Hoy es " + LocalDate.now().format(
-            DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM 'de' yyyy", new Locale("es", "ES"))));
+            DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM 'de' yyyy", new Locale("es", "ES"))
+        ));
         Label hint = new Label("Selecciona una opción del menú para comenzar.");
 
         VBox welcomeBox = new VBox(10, welcome, dateInfo, hint);
@@ -45,13 +50,12 @@ public class SecondaryController {
         secondaryWorkAreaContainer.getChildren().setAll(welcomeBox);
     }
 
-    private void updateSubMenu(String mainMenuOption) {
+    public void updateSubMenu(String mainMenuOption) {
         secondarySubMenuContainer.getChildren().setAll(
             FeaturesProvider.getSubMenu(mainMenuOption)
         );
     }
 
-    // 🟢 Cambiado: acepta cualquier Node, no solo Pane
     public void updateWorkArea(Node newView) {
         secondaryWorkAreaContainer.getChildren().setAll(newView);
     }

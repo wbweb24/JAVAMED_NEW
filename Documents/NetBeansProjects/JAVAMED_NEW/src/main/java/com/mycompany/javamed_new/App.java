@@ -26,13 +26,13 @@ public class App extends Application {
         PrimaryController controller = loader.getController();
         System.out.println("Controlador inicializado: " + controller);
 
-         // Verificar conexión a la base de datos
+         
 
         scene = new Scene(root, 640, 480);
         scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
 
         stage.setScene(scene);
-        stage.setTitle("Mi Aplicación");
+        stage.setTitle("JAVAMED");
         stage.show();
     }
 
@@ -48,13 +48,13 @@ public class App extends Application {
         scene.setRoot(root);
     }
     public static void main(String[] args) {
-        // ✅ Activamos el manejador global de errores
+        
         ErrorsHandler.setGlobalHandler();
 
         try {
-            launch(); // 🚀 Toda la app dentro del try-catch global
+            launch(); 
         } catch (Exception e) {
-            ErrorsHandler.handle(e); // 🔥 Cualquier fallo inesperado se maneja en un solo lugar
+            ErrorsHandler.handle(e); 
         }
     }
     

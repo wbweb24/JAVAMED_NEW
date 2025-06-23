@@ -9,13 +9,14 @@ public class FeaturesDefinitions {
     public static final Map<String, Map<String, Object>> FEATURES = Map.of(
         "Agenda", Map.of(
             "tabla", "appointments",
+            "vista_inicial", Map.of(
+                "tipo", "salida",
+                "tabla", "appointments",
+                "campos", List.of("hora", "paciente", "descripcion", "usuario_asignado"),
+                "filtros", filtrosAgenda(),
+                "titulo", "Agenda desde hoy"
+            ),
             "acciones", Map.of(
-                "📅 Ver agenda", Map.of(
-                    "tipo", "salida",
-                    "campos", List.of("hora", "paciente", "descripcion", "usuario_asignado"),
-                    "filtros", filtrosAgenda(),
-                    "titulo", "Agenda del día"
-                ),
                 "🆕 Nueva cita", Map.of(
                     "tipo", "entrada",
                     "tabla", "appointments",
@@ -29,8 +30,8 @@ public class FeaturesDefinitions {
                 "✏️ Modificar cita", Map.of(
                     "tipo", "edicion",
                     "tabla", "appointments",
-                    "clave", "id", // campo clave único
-                    "campos", List.of("hora", "descripcion") // campos editables
+                    "clave", "id",
+                    "campos", List.of("hora", "descripcion")
                 ),
                 "🗑️ Eliminar cita", Map.of(
                     "tipo", "eliminacion",
@@ -40,17 +41,19 @@ public class FeaturesDefinitions {
             )
         )
 
-        // Podés agregar más módulos como "Clientes", "Usuarios", etc.
+        // Aquí podés agregar más módulos como "Clientes", "Usuarios", etc.
     );
 
     private static Map<String, String> filtrosAgenda() {
+        String hoy = LocalDate.now().toString();
         String usuario = SessionService.getUser();
+
         if (List.of("user1", "user2").contains(usuario)) {
-            return Map.of("fecha", LocalDate.now().toString());
+            return Map.of("fecha >=", hoy); // Mostrar desde hoy
         } else {
             return Map.of(
-                "fecha", LocalDate.now().toString(),
-                "usuario_asignado", usuario
+                "fecha >=", hoy,
+                "usuario_asignado =", usuario
             );
         }
     }

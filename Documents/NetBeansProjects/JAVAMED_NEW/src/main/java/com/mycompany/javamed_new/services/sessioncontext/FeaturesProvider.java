@@ -4,8 +4,8 @@ import com.mycompany.javamed_new.SecondaryController;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-
 import java.util.*;
+import persistence.DataFetcher;
 
 public class FeaturesProvider {
 
@@ -37,18 +37,31 @@ public class FeaturesProvider {
         Map<String, Object> infoAccion = acciones.get(accion);
         if (infoAccion == null) return fallback("⚠️ Acción no reconocida");
 
-        String tipo = (String) infoAccion.get("tipo");
+        return handleActionDirect(infoAccion);
+    }
+
+    public static Node handleActionDirect(Map<String, Object> accionData) {
+        String tipo = (String) accionData.get("tipo");
 
         return switch (tipo) {
-            case "entrada" -> renderInputView(infoAccion);
-            case "salida" -> renderOutputView(infoAccion);
-            case "edicion" -> renderEditView(infoAccion);
-            case "eliminacion" -> renderDeleteView(infoAccion);
+            case "entrada" -> renderInputView(accionData);
+            case "salida" -> renderOutputView(accionData);
+            case "edicion" -> renderEditView(accionData);
+            case "eliminacion" -> renderDeleteView(accionData);
             default -> fallback("❓ Tipo de acción desconocido");
         };
     }
 
-    // 🧾 Formulario dinámico a partir de campos declarados
+    public static Node getDefaultView(String featureName) {
+        Map<String, Object> feature = FeaturesDefinitions.FEATURES.get(featureName);
+        if (feature == null) return fallback("🚫 Módulo no encontrado");
+
+        Map<String, Object> vistaInicial = (Map<String, Object>) feature.get("vista_inicial");
+        if (vistaInicial == null) return fallback("ℹ️ Sin vista inicial definida");
+
+        return handleActionDirect(vistaInicial);
+    }
+
     private static Node renderInputView(Map<String, Object> accionData) {
         List<Map<String, String>> campos = (List<Map<String, String>>) accionData.get("campos");
         WorkAreaView vista = new WorkAreaView();
@@ -63,7 +76,7 @@ public class FeaturesProvider {
             Node input = switch (tipo) {
                 case "text" -> new TextField();
                 case "date" -> new DatePicker();
-                case "time" -> new TextField(); // Podés sustituir con control más específico
+                case "time" -> new TextField();
                 case "number" -> {
                     TextField tf = new TextField();
                     tf.textProperty().addListener((obs, oldV, newV) -> {
@@ -82,8 +95,61 @@ public class FeaturesProvider {
         return vista;
     }
 
+    @SuppressWarnings("unchecked")
     private static Node renderOutputView(Map<String, Object> accionData) {
-        return fallback("📊 Tabla dinámica aún no implementada");
+        String tabla = (String) accionData.get("tabla");
+        List<String> campos = (List<String>) accionData.get("campos");
+        Map<String, String> filtroCrudo = (Map<String, String>) accionData.getOrDefault("filtros", Map.of());
+        String titulo = (String) accionData.getOrDefault("titulo", capitalize(tabla));
+
+        // Separar operadores personalizados
+        Map<String, String> valores = new LinkedHashMap<>();
+        Map<String, String> operadores = new LinkedHashMap<>();
+        for (Map.Entry<String, String> entry : filtroCrudo.entrySet()) {
+            String clave = entry.getKey();
+            String valor = entry.getValue();
+            if (clave.contains(" ")) {
+                String[] partes = clave.split(" ", 2);
+                valores.put(partes[0], valor);
+                operadores.put(partes[0], partes[1]);
+            } else {
+                valores.put(clave, valor);
+                operadores.put(clave, "=");
+            }
+        }
+
+        DataFetcher fetcher = new DataFetcher();
+        List<Map<String, Object>> registros = fetcher.fetchMultipleData(campos, tabla, valores, operadores);
+
+        if (registros.isEmpty()) {
+            return fallback("📭 No hay datos para mostrar.");
+        }
+
+        List<Node> nodos = new ArrayList<>();
+
+        // Encabezados
+        for (String campo : campos) {
+            Label cabecera = new Label(capitalize(campo));
+            cabecera.getStyleClass().add("output-header");
+            nodos.add(cabecera);
+        }
+
+        // Filas
+        for (Map<String, Object> fila : registros) {
+            for (String campo : campos) {
+                String valor = Objects.toString(fila.getOrDefault(campo, ""), "");
+                Label celda = new Label(valor);
+                celda.getStyleClass().add("output-cell");
+                nodos.add(celda);
+            }
+        }
+
+        WorkAreaView grid = new WorkAreaView();
+        grid.setContent(nodos, campos.size());
+
+        VBox contenedor = new VBox(new Label(titulo), grid);
+        contenedor.setSpacing(15);
+        return contenedor;
     }
 
     private static Node renderEditView(Map<String, Object> accionData) {
