@@ -1,0 +1,54 @@
+/* Estilos generales para SecondaryView */
+.secondaryView {
+    -fx-background-color: #E3F2FD; /* Azul claro */
+    -fx-padding: 10px;
+}
+
+/* Menú principal en línea horizontal */
+#secondaryMenuContainer {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #76BCE8;
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px; /* 🔹 Redondeado */
+    -fx-padding: 10px;
+}
+
+/* Submenú */
+#secondarySubMenuContainer {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #76BCE8;
+    -fx-border-width: 2px;
+    -fx-border-radius: 15px;
+    -fx-padding: 10px;
+}
+
+/* Área de trabajo */
+#secondaryWorkAreaContainer {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #76BCE8;
+    -fx-border-radius: 15px;
+    -fx-padding: 15px;
+}
+
+/* Botón de Cerrar Sesión */
+#secondaryButton {
+    -fx-background-color: #ff4d4d;
+    -fx-text-fill: white;
+    -fx-border-radius: 10px;
+    -fx-font-weight: bold;
+}
+
+/* Mensaje de bienvenida */
+.welcome-text {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Contenedor del mensaje */
+#welcomeBox {
+    -fx-background-color: #76BCE8;
+    -fx-padding: 30px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}

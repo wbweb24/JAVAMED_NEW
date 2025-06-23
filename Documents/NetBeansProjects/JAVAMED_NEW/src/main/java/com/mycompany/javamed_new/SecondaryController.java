@@ -1,43 +1,64 @@
 package com.mycompany.javamed_new;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 import javafx.fxml.FXML;
-import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
 import com.mycompany.javamed_new.services.sessioncontext.SessionService;
-import com.mycompany.javamed_new.services.sessioncontext.WorkArea;
-import javafx.scene.layout.Pane;
+import com.mycompany.javamed_new.services.sessioncontext.FeaturesProvider;
 
 public class SecondaryController {
-    
-    @FXML private VBox menuContainer;
-    @FXML private VBox subMenuContainer;
-    @FXML private StackPane workAreaContainer;
+
+    @FXML private GridPane secondaryMenuContainer;
+    @FXML private StackPane secondarySubMenuContainer;
+    @FXML private StackPane secondaryWorkAreaContainer;
 
     @FXML
     private void initialize() {
         SessionService.setControllerInstance(this);
-        menuContainer.getChildren().addAll(SessionService.getMenu()); // 🔹 Carga el menú principal
-        menuContainer.getChildren().forEach(button -> 
-            button.setOnMouseClicked(e -> updateSubMenu(((javafx.scene.control.Button) button).getText())) // 🔹 Evento para submenú
-        );
-        
-        workAreaContainer.getChildren().setAll(WorkArea.getViewForMenuOption("Inicio")); // 🔹 Vista inicial
+
+        // Cargar el menú principal
+        int column = 0;
+        for (Button button : SessionService.getMenu()) {
+            secondaryMenuContainer.add(button, column++, 0);
+            button.setOnMouseClicked(e -> updateSubMenu(button.getText()));
+        }
+
+        // Pantalla de bienvenida
+        Label welcome = new Label("👋 ¡Bienvenido, " + SessionService.getUser() + "!");
+        Label dateInfo = new Label("Hoy es " + LocalDate.now().format(
+            DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM 'de' yyyy", new Locale("es", "ES"))));
+        Label hint = new Label("Selecciona una opción del menú para comenzar.");
+
+        VBox welcomeBox = new VBox(10, welcome, dateInfo, hint);
+        welcomeBox.setAlignment(Pos.CENTER);
+        secondaryWorkAreaContainer.getChildren().setAll(welcomeBox);
     }
 
     private void updateSubMenu(String mainMenuOption) {
-        subMenuContainer.getChildren().setAll(WorkArea.getSubMenu(mainMenuOption)); // 🔹 Actualiza el submenú
+        secondarySubMenuContainer.getChildren().setAll(
+            FeaturesProvider.getSubMenu(mainMenuOption)
+        );
     }
 
-    public void updateWorkArea(Pane newView) {
-        workAreaContainer.getChildren().setAll(newView); // 🔹 Cambia la vista activamente
+    // 🟢 Cambiado: acepta cualquier Node, no solo Pane
+    public void updateWorkArea(Node newView) {
+        secondaryWorkAreaContainer.getChildren().setAll(newView);
     }
 
     @FXML
     private void switchToPrimary() throws IOException {
-        SessionService.endSession(); // 🔹 Limpia datos de sesión
+        SessionService.endSession();
         App.setRoot("primary");
     }
-    
-    
 }

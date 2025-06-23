@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.javamed_new.SecondaryController">
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.mycompany.javamed_new.SecondaryController"
+            stylesheets="@styles/style2.css"
+            styleClass="secondaryView">
+
     <top>
-        <VBox fx:id="menuContainer" spacing="10" alignment="CENTER_LEFT">
-            <Label text="Menú Principal" />
-        </VBox>
+        <GridPane fx:id="secondaryMenuContainer" id="secondaryMenuContainer" hgap="15" alignment="CENTER"/>
     </top>
-    <left>
-        <VBox fx:id="subMenuContainer" spacing="10" alignment="CENTER_LEFT">
-            <Label text="Opciones" />
-        </VBox>
-    </left>
+
+    <right>
+        <StackPane fx:id="secondarySubMenuContainer" id="secondarySubMenuContainer"/>
+    </right>
+
     <center>
-        <StackPane fx:id="workAreaContainer">
-            <Label text="Área de Trabajo" />
-        </StackPane>
+        <StackPane fx:id="secondaryWorkAreaContainer" id="secondaryWorkAreaContainer"/>
     </center>
+
     <bottom>
-        <VBox alignment="CENTER">
-            <Button fx:id="secondaryButton" text="Cerrar Sesión" onAction="#switchToPrimary" />
-        </VBox>
+        <StackPane alignment="CENTER">
+            <Button fx:id="secondaryButton" id="secondaryButton" text="Cerrar Sesión" onAction="#switchToPrimary"/>
+        </StackPane>
     </bottom>
+
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        <Insets top="20" right="20" bottom="20" left="20"/>
     </padding>
 </BorderPane>

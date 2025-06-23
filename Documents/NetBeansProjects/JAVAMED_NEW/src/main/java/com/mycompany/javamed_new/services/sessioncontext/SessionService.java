@@ -8,34 +8,33 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 
 public class SessionService {
+
     private static String currentUser;
     private static String currentPosition;
     private static List<Button> menuButtons;
     private static Pane currentView;
     private static SecondaryController secondaryController;
 
-
-
     private static final Map<String, List<String>> menuOptions = Map.of(
         "reception", List.of("Agenda", "Clientes", "Base de Datos"),
         "accounting", List.of("Facturación", "Informes"),
         "management", List.of("Reportes", "Administración"),
-        "healthcare_provider", List.of("Pacientes", "Historial Médico")
+        "healthcare_pro", List.of("Pacientes", "Historial Médico")
     );
 
     public static void startSession(String user, String position) {
         currentUser = user;
         currentPosition = position;
         menuButtons = menuOptions.getOrDefault(position, List.of("Inicio"))
-                .stream().map(buttonName -> {
-                    Button button = new Button(buttonName);
-                    button.setOnAction(e -> switchWorkArea(buttonName)); // 🔹 Agregar evento de cambio de vista
-                    return button;
-                }).collect(Collectors.toList());
+            .stream().map(buttonName -> {
+                Button button = new Button(buttonName);
+                button.setOnAction(e -> switchWorkArea(buttonName));
+                return button;
+            }).collect(Collectors.toList());
     }
 
     private static void switchWorkArea(String menuOption) {
-        // Aquí se llamaría a WorkArea para actualizar la vista de trabajo
+        // Si lo deseás, aquí podrías delegar a FeaturesProvider para mostrar algo base
     }
 
     public static String getUser() { return currentUser; }
@@ -46,24 +45,26 @@ public class SessionService {
         currentUser = null;
         currentPosition = null;
         menuButtons = null;
+        currentView = null;
+        secondaryController = null;
     }
-    
+
+    public static void setCurrentView(Pane viewForMenuOption) {
+        currentView = viewForMenuOption;
+        updateWorkArea();
+    }
+
     private static void updateWorkArea() {
-        if (secondaryController != null) {
-            secondaryController.updateWorkArea(currentView); // 🔹 Usa la instancia correcta
+        if (secondaryController != null && currentView != null) {
+            secondaryController.updateWorkArea(currentView);
         }
     }
 
-
-
-    public static void setCurrentView(Pane viewForMenuOption) {
-        currentView = viewForMenuOption; // 🔹 Guarda la nueva vista en la sesión
-        updateWorkArea(); // 🔹 Refresca `workAreaContainer` en `SecondaryController`
-    }
-    
     public static void setControllerInstance(SecondaryController controller) {
         secondaryController = controller;
     }
 
-
+    public static SecondaryController getControllerInstance() {
+        return secondaryController;
+    }
 }
