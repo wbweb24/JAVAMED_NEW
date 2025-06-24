@@ -19,6 +19,7 @@ public class FeaturesDefinitions {
             "acciones", Map.of(
                 "🆕 Nueva cita", Map.of(
                     "tipo", "entrada",
+                    "modo", "popup",
                     "tabla", "appointments",
                     "campos", List.of(
                         Map.of("nombre", "fecha", "tipo", "date"),
@@ -29,27 +30,39 @@ public class FeaturesDefinitions {
                 ),
                 "✏️ Modificar cita", Map.of(
                     "tipo", "edicion",
+                    "modo", "popup",
                     "tabla", "appointments",
                     "clave", "id",
                     "campos", List.of("hora", "descripcion")
                 ),
                 "🗑️ Eliminar cita", Map.of(
                     "tipo", "eliminacion",
+                    "modo", "popup",
                     "tabla", "appointments",
                     "clave", "id"
+                ),
+                "📅 Consultar citas antiguas", Map.of(
+                    "tipo", "entrada",
+                    "modo", "popup",
+                    "tabla", "appointments",
+                    "campos", List.of(
+                        Map.of("nombre", "desde", "tipo", "date")
+                    ),
+                    "accion_custom", "consultarCitasAntiguas"
                 )
             )
         )
 
-        // Aquí podés agregar más módulos como "Clientes", "Usuarios", etc.
+        // Podés seguir agregando otros módulos aquí
     );
 
     private static Map<String, String> filtrosAgenda() {
         String hoy = LocalDate.now().toString();
         String usuario = SessionService.getUser();
+        String puesto = SessionService.getPosition();
 
-        if (List.of("user1", "user2").contains(usuario)) {
-            return Map.of("fecha >=", hoy); // Mostrar desde hoy
+        if ("reception".equalsIgnoreCase(puesto)) {
+            return Map.of("fecha >=", hoy);
         } else {
             return Map.of(
                 "fecha >=", hoy,

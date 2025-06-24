@@ -1,9 +1,16 @@
 package com.mycompany.javamed_new.services.sessioncontext;
 
+import com.mycompany.javamed_new.App;
 import com.mycompany.javamed_new.SecondaryController;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import java.util.*;
 import persistence.DataFetcher;
 
@@ -19,9 +26,12 @@ public class FeaturesProvider {
         for (String accion : acciones.keySet()) {
             Button btn = new Button(accion);
             btn.setOnAction(e -> {
-                Node contenido = handleAction(featureName, accion);
-                SecondaryController controller = SessionService.getControllerInstance();
-                if (controller != null) controller.updateWorkArea(contenido);
+                Map<String, Object> infoAccion = acciones.get(accion);
+                Node contenido = handleActionDirect(infoAccion);
+                if (contenido != null) {
+                    SecondaryController controller = SessionService.getControllerInstance();
+                    if (controller != null) controller.updateWorkArea(contenido);
+                }
             });
             botones.add(btn);
         }
@@ -42,6 +52,12 @@ public class FeaturesProvider {
 
     public static Node handleActionDirect(Map<String, Object> accionData) {
         String tipo = (String) accionData.get("tipo");
+        String modo = (String) accionData.getOrDefault("modo", "");
+
+        if ("entrada".equals(tipo) && "popup".equalsIgnoreCase(modo)) {
+            showFormDialog(accionData);
+            return null;
+        }
 
         return switch (tipo) {
             case "entrada" -> renderInputView(accionData);
@@ -65,7 +81,7 @@ public class FeaturesProvider {
     private static Node renderInputView(Map<String, Object> accionData) {
         List<Map<String, String>> campos = (List<Map<String, String>>) accionData.get("campos");
         WorkAreaView vista = new WorkAreaView();
-        List<Node> nodos = new ArrayList<>();
+        List<Node> filas = new ArrayList<>();
 
         for (Map<String, String> campo : campos) {
             String nombre = campo.get("nombre");
@@ -87,12 +103,79 @@ public class FeaturesProvider {
                 default -> new TextField();
             };
 
-            nodos.add(label);
-            nodos.add(input);
+            GridPane fila = new GridPane();
+            fila.setHgap(10);
+            fila.setVgap(5);
+            fila.setMaxWidth(Double.MAX_VALUE);
+            GridPane.setHgrow(input, Priority.ALWAYS);
+            fila.add(label, 0, 0);
+            fila.add(input, 1, 0);
+
+            filas.add(fila);
         }
 
-        vista.setContent(nodos, 2);
+        vista.setVerticalContent(filas);
         return vista;
+    }
+
+    private static void showFormDialog(Map<String, Object> accionData) {
+        Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initStyle(StageStyle.UTILITY);
+        dialog.setTitle("Formulario");
+
+        VBox content = new VBox(15);
+        List<Node> filas = new ArrayList<>();
+
+        List<Map<String, String>> campos = (List<Map<String, String>>) accionData.get("campos");
+        Map<String, Node> inputs = new LinkedHashMap<>();
+
+        for (Map<String, String> campo : campos) {
+            String nombre = campo.get("nombre");
+            String tipo = campo.get("tipo");
+
+            Label label = new Label(capitalize(nombre) + ":");
+
+            Node input = switch (tipo) {
+                case "text" -> new TextField();
+                case "date" -> new DatePicker();
+                case "time" -> new TextField();
+                case "number" -> {
+                    TextField tf = new TextField();
+                    tf.textProperty().addListener((obs, oldV, newV) -> {
+                        if (!newV.matches("\\d*")) tf.setText(oldV);
+                    });
+                    yield tf;
+                }
+                default -> new TextField();
+            };
+
+            inputs.put(nombre, input);
+
+            GridPane fila = new GridPane();
+            fila.setHgap(10);
+            fila.setVgap(5);
+            fila.setMaxWidth(Double.MAX_VALUE);
+            GridPane.setHgrow(input, Priority.ALWAYS);
+            fila.add(label, 0, 0);
+            fila.add(input, 1, 0);
+
+            filas.add(fila);
+        }
+
+        Button aceptar = new Button("Aceptar");
+        aceptar.setOnAction(e -> {
+            // Lógica de envío puede colocarse aquí
+            dialog.close();
+        });
+
+        content.getChildren().addAll(filas);
+        content.getChildren().add(aceptar);
+
+        Scene scene = new Scene(content);
+        scene.getStylesheets().add(App.class.getResource("/styles/style2.css").toExternalForm());
+        dialog.setScene(scene);
+        dialog.showAndWait();
     }
 
     @SuppressWarnings("unchecked")
@@ -102,7 +185,6 @@ public class FeaturesProvider {
         Map<String, String> filtroCrudo = (Map<String, String>) accionData.getOrDefault("filtros", Map.of());
         String titulo = (String) accionData.getOrDefault("titulo", capitalize(tabla));
 
-        // Separar operadores personalizados
         Map<String, String> valores = new LinkedHashMap<>();
         Map<String, String> operadores = new LinkedHashMap<>();
         for (Map.Entry<String, String> entry : filtroCrudo.entrySet()) {
@@ -126,15 +208,12 @@ public class FeaturesProvider {
         }
 
         List<Node> nodos = new ArrayList<>();
-
-        // Encabezados
         for (String campo : campos) {
             Label cabecera = new Label(capitalize(campo));
             cabecera.getStyleClass().add("output-header");
             nodos.add(cabecera);
         }
 
-        // Filas
         for (Map<String, Object> fila : registros) {
             for (String campo : campos) {
                 String valor = Objects.toString(fila.getOrDefault(campo, ""), "");

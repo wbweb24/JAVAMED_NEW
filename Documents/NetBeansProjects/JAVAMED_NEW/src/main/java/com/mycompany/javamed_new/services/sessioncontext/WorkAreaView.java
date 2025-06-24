@@ -3,6 +3,7 @@ package com.mycompany.javamed_new.services.sessioncontext;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import java.util.List;
 
 public class WorkAreaView extends GridPane {
@@ -25,7 +26,12 @@ public class WorkAreaView extends GridPane {
         for (int i = 0; i < elementos.size(); i++) {
             int col = i % columnas;
             int row = i / columnas;
-            add(elementos.get(i), col, row);
+            Node nodo = elementos.get(i);
+            add(nodo, col, row);
+
+            // Hacer que el nodo crezca con la celda
+            setHgrow(nodo, Priority.ALWAYS);
+            setVgrow(nodo, Priority.ALWAYS);
         }
     }
 
@@ -44,5 +50,7 @@ public class WorkAreaView extends GridPane {
     public void setCenteredContent(Node nodo) {
         getChildren().clear();
         add(nodo, 0, 0);
+        setHgrow(nodo, Priority.ALWAYS);
+        setVgrow(nodo, Priority.ALWAYS);
     }
 }
