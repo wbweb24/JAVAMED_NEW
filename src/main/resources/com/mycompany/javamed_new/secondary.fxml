@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.mycompany.javamed_new.SecondaryController"
+            stylesheets="@styles/style2.css"
+            styleClass="secondaryView">
+
+    <top>
+        <GridPane fx:id="secondaryMenuContainer" id="secondaryMenuContainer" hgap="15" alignment="CENTER"/>
+    </top>
+
+    <right>
+        <VBox fx:id="secondarySubMenuContainer" spacing="15" alignment="TOP_CENTER"/>
+    </right>
+
+    <center>
+        <StackPane fx:id="secondaryWorkAreaContainer" id="secondaryWorkAreaContainer"/>
+    </center>
+
+    <bottom>
+        <StackPane alignment="CENTER">
+            <Button fx:id="secondaryButton" id="secondaryButton" text="Cerrar Sesión" onAction="#switchToPrimary"/>
+        </StackPane>
+    </bottom>
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+</BorderPane>
