@@ -55,7 +55,7 @@ A pesar de seguir una arquitectura artesanal y quizá algo atípica, se vislumbr
 
 **JAVAMED** es una aplicación de escritorio desarrollada en Java con interfaz construida en JavaFX, pensada para gestionar de forma local usuarios, citas médicas y tareas administrativas comunes en centros de atención. Trabaja con una base de datos MySQL y mantiene una estructura clara, directa y fácil de escalar.
 
-- La autenticación se realiza con contraseñas cifradas usando **BCrypt**, que aplica salt automáticamente a cada hash, evitando coincidencias y añadiendo una capa fuerte de seguridad. Si se desea probar, en el sql de la carpeta scripts se pueden leer datos de autenticación válidos.
+- La autenticación se realiza con contraseñas cifradas usando **BCrypt**, que aplica salt automáticamente a cada hash, evitando coincidencias y añadiendo una capa fuerte de seguridad. Si se desea probar, en el sql de la carpeta scripts se pueden leer datos de autenticación válidos. Añade los datos necesarios de tu DB en un archivo .env en la raíz del proyecto o conectalo como más te guste hacerlo.
 - Las claves están separadas del perfil de usuario en una tabla específica, lo que permite tener mejor control y aislar la información sensible.
 - La interfaz no es fija: se carga en función del tipo de usuario, y cada uno ve solo lo que le toca. El propio volcado de la interfaz limita lo que se puede hacer o no, por lo que no hace falta montar un sistema de roles más allá de eso.
 - El código está repartido en bloques funcionales y pensados para mantener una estructura limpia: cada parte hace lo que le toca, sin mezclar lógica ni crear dependencias cruzadas entre secciones que no deberían comunicarse.
